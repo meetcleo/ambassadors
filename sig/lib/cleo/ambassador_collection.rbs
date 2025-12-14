@@ -1,0 +1,16 @@
+#
+# Handles a collection of +Ambassador+ objects
+# @see Ambassador
+class AmbassadorCollection
+  @enumerable: untyped
+
+  @each_strategy: untyped
+
+  @ambassador_class: untyped
+
+  include Enumerable
+
+  def initialize: (untyped enumerable) -> void
+
+  def each: () { (untyped) -> untyped } -> untyped
+end
