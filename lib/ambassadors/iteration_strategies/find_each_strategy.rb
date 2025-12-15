@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Ambassadors
-  module IterationStrategies
+  module Iterators
     ##
     # Strategy to use in +AmbassadorCollection+ when it's safer to paginate
     # over batches of the data.

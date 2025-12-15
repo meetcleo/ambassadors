@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Ambassadors
-  module IterationStrategies
+  module Iterators
     class IterationStrategyFactory # :nodoc:
       def self.build(...)
         new(...).iteration_strategy

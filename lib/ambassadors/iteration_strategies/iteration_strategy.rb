@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Ambassadors
-  module IterationStrategies
+  module Iterators
     class IterationStrategy # :nodoc: all
       def initialize(enumerable:, **_kwargs)
         @enumerable = enumerable
