@@ -5,7 +5,7 @@ module Ambassadors
     ##
     # Strategy to use in +AmbassadorCollection+ when it's safer to paginate
     # over batches of the data.
-    class FindEachStrategy < Iterator
+    class FindEachIterator < Iterator
       def initialize(batch_size:, **)
         super(**)
         @batch_size = batch_size
@@ -17,6 +17,6 @@ module Ambassadors
         @enumerable.find_each(batch_size: @batch_size, &)
       end
     end
-    private_constant :FindEachStrategy
+    private_constant :FindEachIterator
   end
 end

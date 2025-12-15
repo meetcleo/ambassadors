@@ -5,8 +5,8 @@ module Ambassadors
     ##
     # Strategy to use in +AmbassadorCollection+ when it's safe to
     # iterate over each item in the set.
-    class EachStrategy < Iterator
+    class EachIterator < Iterator
     end
-    private_constant :EachStrategy
+    private_constant :EachIterator
   end
 end
