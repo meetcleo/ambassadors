@@ -1,11 +1,34 @@
 # frozen_string_literal: true
 # typed: false
 
-##
-# Handles a collection of +Ambassador+ objects
-# @see Ambassador
 module Ambassadors
-
+  ##
+  # Collection wrapper for objects that can be represented as {Ambassadors::Ambassador}
+  # instances.
+  #
+  # @note Although this class is defined under the {Ambassadors} namespace,
+  # it reopens the top-level constant {::AmbassadorCollection}.
+  #
+  # @note The +#each+ method will use batch loading behind the scenes when
+  # enumerable is an ActiveRecord::Relation. This is to protect the database
+  # against loading enormous queries.
+  #
+  # @example Wrap an Array of models
+  #   collection = AmbassadorCollection.new(users, ambassador_class: UserAmbassador)
+  #   collection.each do |ambassador|
+  #     puts ambassador.id
+  #   end
+  #
+  # @example Use with an ActiveRecord::Relation
+  #   relation   = User.where(active: true)
+  #   collection = AmbassadorCollection.new(relation, ambassador_class: UserAmbassador)
+  #   collection.map(&:id)
+  #
+  # @example Enumerate lazily via Enumerator
+  #   collection = AmbassadorCollection.new(users, ambassador_class: UserAmbassador)
+  #   enum = collection.each
+  #   first_two = [enum.next, enum.next]
+  #
   class ::AmbassadorCollection
     require_relative "iteration_strategies"
     require "ambassadors/ambassador_factory"

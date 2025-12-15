@@ -1,28 +1,27 @@
 # typed: false
 # frozen_string_literal: true
 
-##
-# Ambassador objects are returned by our domain interface methods.
-#
-# They act as read-only wrappers for domain entities, forming a stable and immutable
-# interface to expose selected attributes to the outside world. This protects the internal
-# models from direct access and allows for safer internal evolution.
-#
-# YOU SHOULD NOT NEED TO CREATE TOO MANY OF THESE OBJECTS. BUT WHEN RETURNING A DOMAIN ENTITY
-# THROUGH A DOMAIN INTERFACE METHOD IT MUST BE AN AMBASSADOR
-# ------------------------------------------------------------------------------------------
-#
-# @example Defining a user ambassador
-#   class UserAmbassador < Ambassador
-#     expose :id, :email, :created_at
-#   end
-#
-#   user = User.find(...)
-#   ambassador = UserAmbassador.new(user)
-#   ambassador.email # => "user@example.com" (frozen)
-#   ambassador.cleo_bank_cards # => NoMethodError
-
 module Ambassadors
+  ##
+  # Ambassador objects are returned by our domain interface methods.
+  #
+  # They act as read-only wrappers for domain entities, forming a stable and immutable
+  # interface to expose selected attributes to the outside world. This protects the internal
+  # models from direct access and allows for safer internal evolution.
+  #
+  # YOU SHOULD NOT NEED TO CREATE TOO MANY OF THESE OBJECTS. BUT WHEN RETURNING A DOMAIN ENTITY
+  # THROUGH A DOMAIN INTERFACE METHOD IT MUST BE AN AMBASSADOR
+  # ------------------------------------------------------------------------------------------
+  #
+  # @example Defining a user ambassador
+  #   class UserAmbassador < Ambassador
+  #     expose :id, :email, :created_at
+  #   end
+  #
+  #   user = User.find(...)
+  #   ambassador = UserAmbassador.new(user)
+  #   ambassador.email # => "user@example.com" (frozen)
+  #   ambassador.cleo_bank_cards # => NoMethodError
   class ::Ambassador
     require "ambassadors/freezer"
     require "ambassadors/invalid_property_error"
