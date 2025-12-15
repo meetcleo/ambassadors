@@ -113,6 +113,15 @@ collection.each do |ambassador| # loads in batches of 50 by default
 end
 ```
 
+## Ambassador casting
+
+Ambassadors will be cast based on the following strategies, in the order listed:
+- Call `#to_ambassador` on the entity in the current iteration (if it responds to it).
+- Uses the provded `ambassador_class` to initialize a new ambassador for the entity
+- Try to devine the ambassador class name from the entity name (e.g. `User` => `UserAmbassador`)
+
+If no successful strategy can be found, the collection will raise `Ambassadors::UresolvedAmbassadorError`
+
 ---
 
 
