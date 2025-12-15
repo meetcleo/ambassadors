@@ -48,10 +48,11 @@ module Ambassadors
     # @param iteration_strategy [Ambassadors::IterationStrategies::IterationStrategy] Determines how to iterate over each item in the enumerable
     def initialize(enumerable,
                    ambassador_class: nil,
-                   batch_size: DEFAULT_BATCH_SIZE
+                   batch_size: DEFAULT_BATCH_SIZE,
+                   iteration_strategy: Ambassadors::IterationStrategies::IterationStrategyFactory.build(enumerable:, batch_size:)
     )
       @enumerable = enumerable
-      @iteration_strategy = Ambassadors::IterationStrategies::IterationStrategyFactory.build(enumerable:, batch_size:)
+      @iteration_strategy = iteration_strategy
       @ambassador_factory = AmbassadorFactory.new(default_ambassador_class: ambassador_class)
     end
 
