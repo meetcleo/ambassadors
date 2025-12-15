@@ -13,7 +13,7 @@ module Ambassadors
       end
 
       ##
-      # @return [IterationStrategy]
+      # @return [Iterator]
       def iteration_strategy
         if defined?(ActiveRecord::Relation) && @enumerable.is_a?(ActiveRecord::Relation)
           FindEachStrategy
