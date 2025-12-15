@@ -35,7 +35,7 @@ module Ambassadors
       # @return [void]
       #
       # @example
-      #   class CleoBank::CardAmbassador < Ambassador
+      #   class CardAmbassador < Ambassador
       #     expose :id, :email
       #   end
       def expose(*properties)
