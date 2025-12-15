@@ -45,14 +45,13 @@ module Ambassadors
     # @param enumerable [Enumerable]
     # @param ambassador_class [nil, Class]
     # @param batch_size [Integer] The number of records to load per batch (if not loading from memory)
-    # @param iterator [Ambassadors::Iterators::IterationStrategy] Determines how to iterate over each item in the enumerable
+    # @param iterator [Ambassadors::Iterators::IterationStrategy] Determines how to iterate over each item
     def initialize(enumerable,
                    ambassador_class: nil,
                    batch_size: DEFAULT_BATCH_SIZE,
                    iterator: Ambassadors::Iterators::IteratorFactory.build(
                      enumerable:, batch_size:
-                   )
-    )
+                   ))
       @enumerable = enumerable
       @iterator = iterator
       @ambassador_factory = AmbassadorFactory.new(default_ambassador_class: ambassador_class)
