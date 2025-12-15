@@ -9,8 +9,7 @@ class AmbassadorCollection
   # Raised when we are unable to determine which +Ambassador+ class to load
   class UresolvedAmbassadorError < StandardError; end
 
-  require_relative "ambassador_collection/iteration_strategies/each_strategy"
-  require_relative "ambassador_collection/iteration_strategies/find_each_strategy"
+  require_relative "ambassador_collection/iteration_strategies"
 
   include Enumerable
 
@@ -23,17 +22,15 @@ class AmbassadorCollection
     @enumerable = enumerable
     @ambassador_class = ambassador_class
     @batch_size = batch_size
-    @iteration_strategy = determine_iteration_strategy(enumerable:, batch_size:)
+    @iteration_strategy = IterationStrategies::IterationStrategyFactory.build(enumerable:, batch_size:)
   end
 
   def each
-    @iteration_strategy.to_enum unless block_given?
-    @iteration_strategy.each do |item|
+    return enum_for(:each) unless block_given?
+
+    @iteration_strategy.to_enum.each do |item|
       yield(cast_to_ambassador(item))
     end
-    # return enum_for(@iteration_strategies) unless block_given?
-    #
-    # @enumerable.public_send(@iteration_strategies) do
   end
 
   ##
@@ -62,21 +59,17 @@ class AmbassadorCollection
     elsif @ambassador_class
       @ambassador_class.new(item)
     else
-      raise "Cannot infer ambassador for #{item}" unless item.class.name
+      unless item.class.name
+        raise UresolvedAmbassadorError, "Cannot infer ambassador for #{item}"
+      end
+
       inferred_ambassador_class_name = "#{item.class.name}Ambassador"
+
       unless Module.const_defined?(inferred_ambassador_class_name)
-        raise "Cannot infer ambassador for #{item}"
+        raise UresolvedAmbassadorError, "Cannot infer ambassador for #{item}"
       end
 
       Module.const_get(inferred_ambassador_class_name)
     end
-  end
-
-  def determine_iteration_strategy(enumerable:, batch_size:)
-    if defined?(ActiveRecord::Relation) && enumerable.is_a?(ActiveRecord::Relation)
-      IterationStrategies::FindEachStrategy
-    else
-      IterationStrategies::EachStrategy
-    end.new(enumerable: enumerable, batch_size: batch_size)
   end
 end
