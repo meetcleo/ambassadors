@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Ambassador
+module Ambassadors
   ##
   # Ensures any value returned from the entity is deeply frozen.
   # @abstract
