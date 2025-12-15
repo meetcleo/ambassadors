@@ -35,10 +35,6 @@ Add to your Gemfile:
 gem "ambassadors"
 ```
 
-```ruby
-gem "ambassadors"
-```
-
 Then:
 
 `bundle install`
@@ -60,12 +56,10 @@ ambassador.email      # => "user@example.com"
 ambassador.created_at # => 2025-01-01 12:34:56 UTC
 ```
 
-
 ### Key properties:
 
-You must pass the domain entity to #initialize.
 The ambassador instance is frozen in the constructor.
-Only methods declared with expose are generated and exposed.
+Only methods declared with expose are generated and exposed (still need to do more to lock down public methods)
 
 ### expose DSL
 
@@ -75,7 +69,7 @@ class CardAmbassador < Ambassador
 end
 ```
 
-### AmbassadorCollection
+## AmbassadorCollection
 
 AmbassadorCollection is a thin wrapper that:
 - Includes Enumerable
@@ -83,16 +77,43 @@ AmbassadorCollection is a thin wrapper that:
 - Always yields ambassador instances
 
 
-#### Basic usage
+### Basic usage
 
 ```ruby
-users = User.where(active: true)
+users = User.where(active: true).to_a # users is an Array of preloaded records
 collection = AmbassadorCollection.new(users, ambassador_class: UserAmbassador)
 
 collection.each do |ambassador|
   puts ambassador.email
 end
 ```
+
+### With ActiveRecrord
+
+Will safely iterate over `ActiveRecord::Relation` objects, without 
+exposing dangerous methods (e.g. `delete_all`) or loading too many results at once.
+
+```ruby
+users = User.where(active: true).to_a # users is an ActiveRecord::Relation
+collection = AmbassadorCollection.new(users, ambassador_class: UserAmbassador)
+
+collection.each do |ambassador| # loads in batches of 1000 by default
+  puts ambassador.email
+end
+```
+
+Specify an optional `batch_size:` 
+
+```ruby
+users = User.where(active: true).to_a # users is an ActiveRecord::Relation
+collection = AmbassadorCollection.new(users, ambassador_class: UserAmbassador, batch_size: 50)
+
+collection.each do |ambassador| # loads in batches of 50 by default
+  puts ambassador.email
+end
+```
+
+---
 
 
 ## Development
