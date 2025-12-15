@@ -10,6 +10,6 @@ module Ambassadors
     require_relative "iterators/iterator"
     require_relative "iterators/each_strategy"
     require_relative "iterators/find_each_strategy"
-    require_relative "iterators/iteration_strategy_factory"
+    require_relative "iterators/iterator_factory"
   end
 end

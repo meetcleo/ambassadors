@@ -2,7 +2,7 @@
 
 module Ambassadors
   module Iterators
-    class IterationStrategyFactory # :nodoc:
+    class IteratorFactory # :nodoc:
       def self.build(...)
         new(...).iteration_strategy
       end
