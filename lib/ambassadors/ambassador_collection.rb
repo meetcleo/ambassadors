@@ -49,11 +49,12 @@ module Ambassadors
     def initialize(enumerable,
                    ambassador_class: nil,
                    batch_size: DEFAULT_BATCH_SIZE,
-                   iterator: Ambassadors::Iterators::IteratorFactory.build(
-                     enumerable:, batch_size:
-                   ))
+                   iterator: Ambassadors::Iterators::IteratorResolver.resolve(
+                     enumerable:
+                   )
+    )
       @enumerable = enumerable
-      @iterator = iterator
+      @iterator = iterator.new(enumerable: @enumerable, batch_size: batch_size)
       @ambassador_factory = AmbassadorFactory.new(default_ambassador_class: ambassador_class)
     end
 
