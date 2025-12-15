@@ -2,10 +2,6 @@
 
 module Ambassadors
   class AmbassadorFactory # :nodoc:
-    ##
-    # Raised when we are unable to determine which +Ambassador+ class to load
-    class UresolvedAmbassadorError < StandardError; end
-
     def initialize(default_ambassador_class: nil)
       @default_ambassador_class = default_ambassador_class
     end
