@@ -1,3 +1,6 @@
+> [!NOTE]
+> This repo is currently private, and the gem has not been released
+
 # Ambassadors
 
 Immutable, read-only wrappers for your domain entities, designed for modular / modularised monoliths with explicit domain interfaces.
