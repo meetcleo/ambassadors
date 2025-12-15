@@ -7,9 +7,9 @@ module Ambassadors
   # setting limits on how many records are loaded from a DB at a time, or
   # how to safely paginate records on a 3rd party API.
   module Iterators # :nodoc:
-    require_relative "iteration_strategies/iteration_strategy"
-    require_relative "iteration_strategies/each_strategy"
-    require_relative "iteration_strategies/find_each_strategy"
-    require_relative "iteration_strategies/iteration_strategy_factory"
+    require_relative "iterators/iteration_strategy"
+    require_relative "iterators/each_strategy"
+    require_relative "iterators/find_each_strategy"
+    require_relative "iterators/iteration_strategy_factory"
   end
 end
