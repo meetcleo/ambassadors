@@ -212,6 +212,13 @@ class AmbassadorCollectionTest < Minitest::Test
     assert_equal(3, collection.count)
   end
 
+  # Not 100% about this, but it seems like the best way to simplify this interaction
+  test "#all returns self" do
+    collection = AmbassadorCollection.new([])
+
+    assert_equal collection, collection.all
+  end
+
   private
 
   def build(factory_name, *_traits, **attributes)

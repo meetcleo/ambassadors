@@ -49,8 +49,8 @@ module Ambassadors
     def initialize(enumerable,
                    ambassador_class: nil,
                    batch_size: DEFAULT_BATCH_SIZE,
-                   iteration_strategy: Ambassadors::IterationStrategies::IterationStrategyFactory.build(enumerable:, batch_size:)
-    )
+                   iteration_strategy: Ambassadors::IterationStrategies::IterationStrategyFactory.build(enumerable:,
+                                                                                                        batch_size:))
       @enumerable = enumerable
       @iteration_strategy = iteration_strategy
       @ambassador_factory = AmbassadorFactory.new(default_ambassador_class: ambassador_class)
@@ -73,5 +73,15 @@ module Ambassadors
 
     alias size length
     alias count length
+
+    ##
+    # The entire collection. Returns self.
+    # @return [self]
+    def all
+      # TODO: Revisit this decision?
+      # This makes sense in terms of the entire collection _is_ the collection,
+      # but it might not be the best implementation
+      self
+    end
   end
 end
