@@ -26,6 +26,8 @@ module Ambassadors
     require "ambassadors/freezer"
     require "ambassadors/property_name_checker"
 
+
+
     class << self
       # Declares one or more methods that should be publicly exposed as read-only properties
       # Values returned from these methods are frozen.
@@ -49,6 +51,8 @@ module Ambassadors
           end
         end
       end
+
+      private :instance_eval, :instance_exec
 
       private
 
