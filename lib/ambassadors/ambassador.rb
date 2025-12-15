@@ -24,7 +24,6 @@ module Ambassadors
   #   ambassador.cleo_bank_cards # => NoMethodError
   class ::Ambassador
     require "ambassadors/freezer"
-    require "ambassadors/invalid_property_error"
     require "ambassadors/property_name_checker"
 
     class << self
