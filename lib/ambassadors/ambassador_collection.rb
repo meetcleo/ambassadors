@@ -51,8 +51,7 @@ module Ambassadors
                    batch_size: DEFAULT_BATCH_SIZE,
                    iterator: Ambassadors::Iterators::IteratorResolver.resolve(
                      enumerable:
-                   )
-    )
+                   ))
       @enumerable = enumerable
       @iterator = iterator.new(enumerable: @enumerable, batch_size: batch_size)
       @ambassador_factory = AmbassadorFactory.new(default_ambassador_class: ambassador_class)
