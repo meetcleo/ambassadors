@@ -3,7 +3,7 @@
 require_relative "lib/cleo/ambassador"
 
 Gem::Specification.new do |spec|
-  spec.name = "cleo-ambassador"
+  spec.name = "ambassadors"
   spec.version = Ambassador::VERSION
   spec.authors = ["Gavin Morrice"]
   spec.email = ["gavin@gavinmorrice.com"]
@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description = <<~STRING
     Cleo Ambassador objects are frozen, domain entity objects that are safe for being passed across domain boundaries
   STRING
-  spec.homepage = "https://github.com/bodacious/cleo-ambassador"
+  spec.homepage = "https://github.com/bodacious/ambassadors"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.2.0"
 

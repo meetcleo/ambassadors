@@ -104,4 +104,13 @@ class AmbassadorTest < Minitest::Test
 
     refute_includes ambassador.inspect, "bar: 'bar-value'"
   end
+
+  test "#== returns true if the same entitiy is represented" do
+    entity = stub("TestFoo", foo: "foo-value", fizz: "fizz-value", buzz: "buzz-value", bar: "bar-value")
+
+    ambassador_a = TestFooAmbassador.new(entity)
+    ambassador_b = TestFooAmbassador.new(entity)
+
+    assert_equal ambassador_a, ambassador_b
+  end
 end
