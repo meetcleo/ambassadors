@@ -45,21 +45,21 @@ module Ambassadors
     # @param enumerable [Enumerable]
     # @param ambassador_class [nil, Class]
     # @param batch_size [Integer] The number of records to load per batch (if not loading from memory)
-    # @param iteration_strategy [Ambassadors::IterationStrategies::IterationStrategy] Determines how to iterate over each item in the enumerable
+    # @param iterator [Ambassadors::IterationStrategies::IterationStrategy] Determines how to iterate over each item in the enumerable
     def initialize(enumerable,
                    ambassador_class: nil,
                    batch_size: DEFAULT_BATCH_SIZE,
-                   iteration_strategy: Ambassadors::IterationStrategies::IterationStrategyFactory.build(enumerable:,
+                   iterator: Ambassadors::IterationStrategies::IterationStrategyFactory.build(enumerable:,
                                                                                                         batch_size:))
       @enumerable = enumerable
-      @iteration_strategy = iteration_strategy
+      @iterator = iterator
       @ambassador_factory = AmbassadorFactory.new(default_ambassador_class: ambassador_class)
     end
 
     def each
       return enum_for(:each) unless block_given?
 
-      @iteration_strategy.to_enum.each do |item|
+      @iterator.to_enum.each do |item|
         yield(@ambassador_factory.cast(item))
       end
     end
