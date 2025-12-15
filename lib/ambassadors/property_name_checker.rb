@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Ambassador
+module Ambassadors
   ##
   # Validates that exposed property names are safe
   class PropertyNameChecker

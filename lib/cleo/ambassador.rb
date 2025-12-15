@@ -25,8 +25,8 @@
 module Ambassadors
   class ::Ambassador
     require "ambassadors/freezer"
-    require_relative "ambassador/invalid_property_error"
-    require_relative "ambassador/property_name_checker"
+    require "ambassadors/invalid_property_error"
+    require "ambassadors/property_name_checker"
 
     class << self
       # Declares one or more methods that should be publicly exposed as read-only properties

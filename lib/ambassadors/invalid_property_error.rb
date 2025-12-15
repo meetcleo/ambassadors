@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Ambassador
+module Ambassadors
   ##
   # Raised when trying to expose an unsafe property
   class InvalidPropertyError < StandardError
