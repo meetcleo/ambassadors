@@ -88,7 +88,7 @@ module Ambassadors
     #
     # @return [String]
     def inspect
-      "<#{self.class.name} #{exposed_properties.map { |k, v| "#{k}=#{v.inspect}" }.join(", ")}>"
+      "<#{self.class.name} #{exposed_properties.map { |k, v| "#{k}=#{v.inspect}" }.join(", ").strip}>"
     end
 
     private
