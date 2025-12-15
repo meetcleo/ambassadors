@@ -2,3 +2,6 @@
 
 require_relative "cleo/ambassador"
 require_relative "cleo/ambassador_collection"
+
+module Ambassadors
+end

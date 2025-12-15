@@ -23,7 +23,6 @@
 #   ambassador.cleo_bank_cards # => NoMethodError
 #
 class Ambassador
-  require_relative "ambassador/version"
   require_relative "ambassador/freezer"
   require_relative "ambassador/invalid_property_error"
   require_relative "ambassador/property_name_checker"

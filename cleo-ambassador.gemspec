@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "lib/cleo/ambassador"
+require_relative "lib/ambassadors/version"
 
 Gem::Specification.new do |spec|
   spec.name = "ambassadors"
-  spec.version = Ambassador::VERSION
+  spec.version = Ambassadors::VERSION
   spec.authors = ["Gavin Morrice"]
   spec.email = ["gavin@gavinmorrice.com"]
 
