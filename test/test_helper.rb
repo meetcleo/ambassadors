@@ -23,9 +23,7 @@ module Minitest
       conn = ActiveRecord::Base.connection
       conn.create_table(table_name, temporary: true, force: true) do |t|
         row_options.each do |(name, opts_hash)|
-          t.public_send(opts_hash[:type],
-                        name,
-                        **opts_hash.except(:type))
+          t.public_send(opts_hash[:type], name, **opts_hash.except(:type))
         end
       end
       block.call

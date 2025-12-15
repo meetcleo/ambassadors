@@ -2,7 +2,7 @@
 
 module Ambassadors
   module IterationStrategies
-    class IterationStrategy
+    class IterationStrategy # :nodoc: all
       def initialize(enumerable:, **_kwargs)
         @enumerable = enumerable
       end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Ambassadors
-  class AmbassadorFactory
+  class AmbassadorFactory # :nodoc:
     ##
     # Raised when we are unable to determine which +Ambassador+ class to load
     class UresolvedAmbassadorError < StandardError; end

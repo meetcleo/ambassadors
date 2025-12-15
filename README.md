@@ -1,43 +1,114 @@
-# CleoAmbassador
+# Ambassadors
 
-TODO: Delete this and the text below, and describe your gem
+Immutable, read-only wrappers for your domain entities, designed for modular / modularised monoliths with explicit domain interfaces.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/cleo_ambassador`. To experiment with that code, run `bin/console` for an interactive prompt.
+The core of this gem is the `Ambassador` class, with `AmbassadorCollection` as a supporting abstraction for iterating safely over many ambassadors.
+
+- `Ambassador` – a frozen, read-only, stable façade over a domain entity.
+- `AmbassadorCollection` – an `Enumerable` that always yields ambassador instances, with optional batching for heavy data sources (such as large ActiveRecord collections).
+
+---
+
+## Motivation
+
+In a modular monolith, domain boundaries should be explicit. 
+
+Passing raw ORM models or deeply coupled objects across those boundaries makes refactors risky and leaks internal concerns everywhere.
+
+**Ambassadors** are:
+
+- Read-only views over your domain entities
+- Explicitly whitelisted in what they expose
+- Immutable once constructed
+
+They are a safe value to return from **domain interface methods** to the outside world (other domains, adapters, controllers, etc.).
+
+`AmbassadorCollection` then gives you a consistent way to work with many such ambassadors, regardless of the underlying source (e.g. `Array`, `ActiveRecord::Relation`, remote API results).
+
+---
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+Add to your Gemfile:
 
-Install the gem and add to the application's Gemfile by executing:
-
-```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+```ruby
+gem "ambassadors"
 ```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+```ruby
+gem "ambassadors"
 ```
 
-## Usage
+Then:
 
-TODO: Write usage instructions here
+`bundle install`
+
+
+## Defining an Ambassador
+
+```ruby
+class UserAmbassador < Ambassador
+  expose :id, :email, :created_at
+end
+```
+
+```ruby
+user = User.find(...)
+ambassador = UserAmbassador.new(user)
+ambassador.id         # => 123
+ambassador.email      # => "user@example.com"
+ambassador.created_at # => 2025-01-01 12:34:56 UTC
+```
+
+
+### Key properties:
+
+You must pass the domain entity to #initialize.
+The ambassador instance is frozen in the constructor.
+Only methods declared with expose are generated and exposed.
+
+### expose DSL
+
+```ruby
+class CardAmbassador < Ambassador
+  expose :id, :last4, :status
+end
+```
+
+### AmbassadorCollection
+
+AmbassadorCollection is a thin wrapper that:
+- Includes Enumerable
+- Iterates using a strategy (plain each, find_each, remote paging (TODO), etc.) 
+- Always yields ambassador instances
+
+
+#### Basic usage
+
+```ruby
+users = User.where(active: true)
+collection = AmbassadorCollection.new(users, ambassador_class: UserAmbassador)
+
+collection.each do |ambassador|
+  puts ambassador.email
+end
+```
+
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+Run tests:
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+`bundle exec rake test`
 
-## Contributing
+Run guard (if configured):
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/cleo_ambassador. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/cleo_ambassador/blob/main/CODE_OF_CONDUCT.md).
+`bundle exec guard`
 
-## License
+Lint:
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+`bundle exec rubocop`
 
-## Code of Conduct
+License
 
-Everyone interacting in the CleoAmbassador project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/cleo_ambassador/blob/main/CODE_OF_CONDUCT.md).
+MIT. See [LICENSE] for details

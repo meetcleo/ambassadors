@@ -2,13 +2,22 @@ AllCops:
   TargetRubyVersion: 3.2
   NewCops: enable
 
+Lint/Void:
+  Exclude:
+    # Some tests use blocks with nil to test iteration behaviour
+    - test/*
+
 Metrics/BlockLength:
   Exclude:
-    - test/*_test.rb
+    - test/*
 
 Metrics/ClassLength:
   Exclude:
-    - test/*_test.rb
+    - test/*
+
+Metrics/MethodLength:
+  Exclude:
+    - test/*
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes

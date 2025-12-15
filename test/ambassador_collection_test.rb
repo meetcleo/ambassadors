@@ -73,7 +73,7 @@ class AmbassadorCollectionTest < Minitest::Test
       end
 
       ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
-        collection.each { |_ambassador| }
+        collection.each { |_ambassador| nil }
       end
 
       assert_equal 5, rows_per_query.first
@@ -105,7 +105,7 @@ class AmbassadorCollectionTest < Minitest::Test
       end
 
       ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
-        collection.each { |_ambassador| }
+        collection.each { |_ambassador| nil }
       end
 
       assert_equal 1, sql_event_payloads.length,
