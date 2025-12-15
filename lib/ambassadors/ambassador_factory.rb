@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 module Ambassadors
   class AmbassadorFactory
-
     ##
     # Raised when we are unable to determine which +Ambassador+ class to load
     class UresolvedAmbassadorError < StandardError; end
@@ -22,9 +23,7 @@ module Ambassadors
 
       return @default_ambassador_class.new(entity) if @default_ambassador_class
 
-      unless entity.class.name
-        raise UresolvedAmbassadorError, "Cannot infer ambassador for #{entity}"
-      end
+      raise UresolvedAmbassadorError, "Cannot infer ambassador for #{entity}" unless entity.class.name
 
       inferred_ambassador_class_for_entity(entity)
     end

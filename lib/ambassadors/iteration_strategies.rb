@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AmbassadorCollection
   module IterationStrategies
     require_relative "iteration_strategies/iteration_strategy"

@@ -6,9 +6,9 @@ require "ambassadors"
 require "minitest/autorun"
 require "mocha/minitest"
 require "debug"
-require 'sqlite3'
+require "sqlite3"
 require "active_record"
-require 'bundler'
+require "bundler"
 Bundler.setup(:default, :test)
 
 ActiveRecord::Base.establish_connection(adapter: "sqlite3", database: ":memory:")

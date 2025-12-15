@@ -1,18 +1,17 @@
-module Ambassadors
+# frozen_string_literal: true
 
+module Ambassadors
   module IterationStrategies
     class IterationStrategy
-
-      def initialize(enumerable:, **kwargs)
+      def initialize(enumerable:, **_kwargs)
         @enumerable = enumerable
       end
 
-      def each(&block)
+      def each(&)
         return enum_for(:each) unless block_given?
 
-        @enumerable.each(&block)
+        @enumerable.each(&)
       end
     end
   end
-
 end

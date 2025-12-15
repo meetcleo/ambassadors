@@ -13,8 +13,6 @@ class AmbassadorCollectionTest < Minitest::Test
       expose :id
     end
 
-    returned_ids = []
-
     collection = AmbassadorCollection.new(
       entities,
       ambassador_class: ambassador_class
@@ -22,7 +20,7 @@ class AmbassadorCollectionTest < Minitest::Test
 
     assert_respond_to collection, :each
 
-    collection.each { |ambassador| returned_ids.push(ambassador.id) }
+    returned_ids = collection.map(&:id)
 
     assert_equal [1, 2, 3], returned_ids
   end
@@ -37,16 +35,13 @@ class AmbassadorCollectionTest < Minitest::Test
       expose :id
     end
 
-    returned_classes = []
-
     collection = AmbassadorCollection.new(
       entities,
       ambassador_class: ambassador_class
     )
 
-    collection.each {
-      |ambassador| returned_classes.push(ambassador.class)
-    }
+    returned_classes = collection.map(&:class)
+
     assert_equal(3.times.map { ambassador_class }, returned_classes)
   end
 
@@ -78,7 +73,7 @@ class AmbassadorCollectionTest < Minitest::Test
       end
 
       ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
-        collection.each { |_ambassador| nil }
+        collection.each { |_ambassador| }
       end
 
       assert_equal 5, rows_per_query.first
@@ -110,7 +105,7 @@ class AmbassadorCollectionTest < Minitest::Test
       end
 
       ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
-        collection.each { |_ambassador| nil }
+        collection.each { |_ambassador| }
       end
 
       assert_equal 1, sql_event_payloads.length,
@@ -123,13 +118,13 @@ class AmbassadorCollectionTest < Minitest::Test
     end
   end
 
-  test '#each returns an enumerator when no block is given' do
+  test "#each returns an enumerator when no block is given" do
     collection = AmbassadorCollection.new([])
 
     assert_instance_of Enumerator, collection.each
   end
 
-  test '#each returns an enumerator when no block is given (ActiveRecord::Relation)' do
+  test "#each returns an enumerator when no block is given (ActiveRecord::Relation)" do
     with_test_table(:test_entities, name: { type: :string, null: false }) do
       model = Class.new(ActiveRecord::Base) do
         self.table_name = "test_entities"
@@ -146,11 +141,12 @@ class AmbassadorCollectionTest < Minitest::Test
         enumerable,
         ambassador_class: ambassador_class
       )
+
       assert_instance_of Enumerator, collection.each
     end
   end
 
-  test '#each casts item as Ambassador when being iterated manually' do
+  test "#each casts item as Ambassador when being iterated manually" do
     enumerable = [build(:entity, id: 1)]
     ambassador_class = Class.new(Ambassador) do
       expose :id
@@ -158,6 +154,7 @@ class AmbassadorCollectionTest < Minitest::Test
     collection = AmbassadorCollection.new(enumerable, ambassador_class: ambassador_class)
 
     enumerator = collection.each
+
     assert_instance_of ambassador_class, enumerator.next
   end
 

@@ -1,8 +1,8 @@
+# frozen_string_literal: true
+
 module Ambassadors
-
-module IterationStrategies
+  module IterationStrategies
     class IterationStrategyFactory
-
       def self.build(...)
         new(...).iteration_strategy
       end
