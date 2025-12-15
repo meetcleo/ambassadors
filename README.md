@@ -143,4 +143,4 @@ License
 
 MIT. See [LICENSE][LICENSE] for details
 
-[LICENSE]: https://github.com/meetcleo/ambassadors/blob/main/LICENSE
+[LICENSE]: https://github.com/meetcleo/ambassadors/blob/main/LICENSE.txt
