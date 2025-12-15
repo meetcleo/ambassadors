@@ -15,8 +15,8 @@ module Ambassadors
     # @raise [InvalidPropertyError] if method is not something we want to expose
     # @return [void]
     def check!
-      raise Ambassador::InvalidPropertyError, property_name if property_name_is_bang?
-      raise Ambassador::InvalidPropertyError, property_name if property_name_is_setter?
+      raise Ambassadors::InvalidPropertyError, property_name if property_name_is_bang?
+      raise Ambassadors::InvalidPropertyError, property_name if property_name_is_setter?
     end
 
     private

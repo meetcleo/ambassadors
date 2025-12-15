@@ -3,7 +3,8 @@
 
 require "test_helper"
 
-require "cleo/ambassador"
+require "ambassadors"
+
 class AmbassadorTest < Minitest::Test
   class TestFooAmbassador < Ambassador
     expose :foo
@@ -65,7 +66,7 @@ class AmbassadorTest < Minitest::Test
 
   # Assume that bang methods have side-effects and are not safe to forward
   test ".expose methods will raise a InvalidPropertyError if method name is a bang" do
-    assert_raises(Ambassador::InvalidPropertyError) do
+    assert_raises(Ambassadors::InvalidPropertyError) do
       Class.new(Ambassador) do
         expose :method_with_bang!
       end
@@ -73,7 +74,7 @@ class AmbassadorTest < Minitest::Test
   end
 
   test ".expose methods will raise a InvalidPropertyError if method name is a setter" do
-    assert_raises(Ambassador::InvalidPropertyError) do
+    assert_raises(Ambassadors::InvalidPropertyError) do
       Class.new(Ambassador) do
         expose :method_is_setter=
       end

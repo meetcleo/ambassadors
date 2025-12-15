@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 
-class AmbassadorCollection
+module Ambassadors
   module IterationStrategies
     ##
     # Strategy to use in +AmbassadorCollection+ when it's safer to paginate
@@ -18,5 +18,6 @@ class AmbassadorCollection
         @enumerable.find_each(batch_size: @batch_size, &block)
       end
     end
+    private_constant :FindEachStrategy
   end
 end

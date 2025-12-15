@@ -1,4 +1,4 @@
-class AmbassadorCollection
+module Ambassadors
 
   module IterationStrategies
     class IterationStrategy

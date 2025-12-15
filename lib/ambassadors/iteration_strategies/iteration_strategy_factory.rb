@@ -1,6 +1,6 @@
-class AmbassadorCollection
+module Ambassadors
 
-  module IterationStrategies
+module IterationStrategies
     class IterationStrategyFactory
 
       def self.build(...)

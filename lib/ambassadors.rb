@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative "cleo/ambassador"
-require_relative "cleo/ambassador_collection"
-
 module Ambassadors
+  require_relative "ambassadors/version"
+  require_relative "ambassadors/ambassador"
+  require_relative "ambassadors/ambassador_collection"
 end
