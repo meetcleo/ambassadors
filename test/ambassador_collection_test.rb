@@ -219,6 +219,124 @@ class AmbassadorCollectionTest < Minitest::Test
     assert_equal collection, collection.all
   end
 
+  test "#find returns the first item that evaluates true for the block" do
+    entities = [
+      build(:entity, id: 1),
+      build(:entity, id: 2),
+      build(:entity, id: 3),
+      build(:entity, id: 4),
+      build(:entity, id: 5),
+      build(:entity, id: 6)
+    ]
+    ambassador_class = Class.new(Ambassador) { expose :id }
+
+    collection = AmbassadorCollection.new(
+      entities,
+      ambassador_class: ambassador_class
+    )
+    result = collection.find { |item| item.id == 6 }
+
+    refute_nil result, "Expected to find an entry with ID 6"
+  end
+
+  test "#find returns the first item that evaluates true for the block in batches" do
+    with_test_table(:test_entities, name: { type: :string, null: false }) do
+      model = Class.new(ActiveRecord::Base) do
+        self.table_name = "test_entities"
+      end
+      6.times do |i|
+        model.create!(name: "Entity #{i + 1}")
+      end
+      enumerable = model.order(:id)
+      ambassador_class = Class.new(Ambassador) do
+        expose :id, :name
+      end
+
+      collection = AmbassadorCollection.new(
+        enumerable,
+        ambassador_class: ambassador_class,
+        batch_size: 5
+      )
+      collection.find { |item| item.name == "Entity 6" }
+
+      sql_event_payloads = []
+      callback = lambda do |_name, _start, _finish, _id, payload|
+        sql_event_payloads.push(payload)
+      end
+
+      ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+        collection.each { |_ambassador| nil }
+      end
+
+      # Expect 2 queries, because 6 entities and 5 per batch
+      assert_equal 2, sql_event_payloads.length,
+                   "Expected 2 SQL queries but there were #{sql_event_payloads.length}"
+    end
+  end
+
+  test "#select returns all items that evaluate true for the block" do
+    entities = [
+      build(:entity, id: 1),
+      build(:entity, id: 2),
+      build(:entity, id: 3),
+      build(:entity, id: 4),
+      build(:entity, id: 5),
+      build(:entity, id: 6)
+    ]
+    ambassador_class = Class.new(Ambassador) { expose :id }
+
+    collection = AmbassadorCollection.new(
+      entities,
+      ambassador_class: ambassador_class
+    )
+    results = collection.select { |item| item.id.even? }
+
+    refute_includes  results.map(&:id), 1
+    assert_includes  results.map(&:id), 2
+    refute_includes  results.map(&:id), 3
+    assert_includes  results.map(&:id), 4
+    refute_includes  results.map(&:id), 5
+    assert_includes  results.map(&:id), 6
+
+    refute_nil results, "Expected to find an entry with ID 6"
+  end
+
+  test "#select returns all item that evaluate true for the block - in batches" do
+    with_test_table(:test_entities, name: { type: :string, null: false }) do
+      model = Class.new(ActiveRecord::Base) do
+        self.table_name = "test_entities"
+      end
+      6.times do |i|
+        model.create!(name: "Entity #{i + 1}")
+      end
+      enumerable = model.order(:id)
+      ambassador_class = Class.new(Ambassador) do
+        expose :id, :name
+      end
+
+      collection = AmbassadorCollection.new(
+        enumerable,
+        ambassador_class: ambassador_class,
+        batch_size: 5
+      )
+
+      collection.select { |item| item.id.even? }
+
+      sql_event_payloads = []
+      callback = lambda do |_name, _start, _finish, _id, payload|
+        sql_event_payloads.push(payload)
+      end
+
+      ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+        collection.each { |_ambassador| nil }
+      end
+
+      # Expect 2 queries, because 6 entities and 5 per batch
+      assert_equal 2, sql_event_payloads.length,
+                   "Expected 2 SQL queries but there were #{sql_event_payloads.length}"
+    end
+  end
+
   private
 
   def build(factory_name, *_traits, **attributes)
