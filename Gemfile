@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in cleo-ambassador.gemspec
+# Specify your gem's dependencies in ambassadors.gemspec
 gemspec
 
 group :doc do
