@@ -337,6 +337,37 @@ class AmbassadorCollectionTest < Minitest::Test
     end
   end
 
+  test "#take returns the first record by default" do
+    entities = [
+      build(:entity, id: 1),
+      build(:entity, id: 2)
+    ]
+    ambassador_class = Class.new(Ambassador) { expose :id }
+
+    collection = AmbassadorCollection.new(
+      entities,
+      ambassador_class: ambassador_class
+    )
+
+    assert_equal 1, collection.take.id
+  end
+
+  test "#take returns n records if n is provided" do
+    entities = [
+      build(:entity, id: 1),
+      build(:entity, id: 2)
+    ]
+    ambassador_class = Class.new(Ambassador) { expose :id }
+
+    collection = AmbassadorCollection.new(
+      entities,
+      ambassador_class: ambassador_class
+    )
+
+    assert_instance_of Array, collection.take(2)
+    assert_equal([1, 2], collection.take(2).map(&:id))
+  end
+
   private
 
   def build(factory_name, *_traits, **attributes)

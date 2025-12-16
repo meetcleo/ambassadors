@@ -84,5 +84,13 @@ module Ambassadors
       # but it might not be the best implementation
       self
     end
+
+    def take(n = nil)
+      if n.nil?
+        @enumerable.take(1)[0]
+      else
+        @enumerable.take(n)
+      end
+    end
   end
 end
