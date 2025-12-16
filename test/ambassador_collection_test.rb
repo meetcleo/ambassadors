@@ -368,6 +368,28 @@ class AmbassadorCollectionTest < Minitest::Test
     assert_equal([1, 2], collection.take(2).map(&:id))
   end
 
+  test "#initialize does not load the collection when ActiveRecord::Relation" do
+    with_test_table(:test_entities, name: { type: :string, null: false }) do
+      model = Class.new(ActiveRecord::Base) do
+        self.table_name = "test_entities"
+      end
+      model.create!(name: "Entity 1")
+
+      ambassador_class = Class.new(Ambassador) do
+        expose :id, :name
+      end
+
+      enumerable = model.all
+      enumerable.expects(:load).never
+
+      AmbassadorCollection.new(
+        enumerable,
+        ambassador_class: ambassador_class,
+        batch_size: 5
+      )
+    end
+  end
+
   private
 
   def build(factory_name, *_traits, **attributes)
