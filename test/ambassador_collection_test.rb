@@ -176,22 +176,16 @@ class AmbassadorCollectionTest < Minitest::Test
     assert_equal(3, collection.length)
   end
 
-  test "#size (alias) returns the number of items in the collection" do
-    entities = [
-      build(:entity, id: 1),
-      build(:entity, id: 2),
-      build(:entity, id: 3)
-    ]
-    ambassador_class = Class.new(Ambassador) do
-      expose :id
-    end
+  test "#size is an alias of length" do
+    collection = AmbassadorCollection.new([])
 
-    collection = AmbassadorCollection.new(
-      entities,
-      ambassador_class: ambassador_class
-    )
+    assert_equal collection.method(:length), collection.method(:size)
+  end
 
-    assert_equal(3, collection.size)
+  test "#count is an alias of length" do
+    collection = AmbassadorCollection.new([])
+
+    assert_equal collection.method(:length), collection.method(:count)
   end
 
   test "#count (alias) returns the number of items in the collection" do

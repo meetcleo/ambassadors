@@ -69,7 +69,7 @@ module Ambassadors
     # The number of items in the current collection
     # @return [Integer]
     def length
-      @enumerable.to_a.length
+      @enumerable.length
     end
 
     alias size length
