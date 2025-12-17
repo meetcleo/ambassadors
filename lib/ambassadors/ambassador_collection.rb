@@ -85,11 +85,11 @@ module Ambassadors
       self
     end
 
-    def take(n = nil)
-      if n.nil?
+    def take(index = nil)
+      if index.nil?
         @enumerable.take(1)[0]
       else
-        @enumerable.take(n)
+        super
       end
     end
   end
