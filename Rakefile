@@ -3,10 +3,13 @@
 require "bundler/gem_tasks"
 require "rake/testtask"
 
-require "yard"
-
-YARD::Rake::YardocTask.new(:doc) do |t|
-  t.options = ["--yardopts", ".yardopts"] # optional, YARD uses this by default
+begin
+  require "yard"
+  YARD::Rake::YardocTask.new(:doc) do |t|
+    t.options = ["--yardopts", ".yardopts"] # optional, YARD uses this by default
+  end
+rescue LoadError
+  puts "Ignoring YARD doc task. Yard not installed."
 end
 
 Rake::TestTask.new(:test) do |t|
