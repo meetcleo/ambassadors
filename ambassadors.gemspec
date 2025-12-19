@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description = <<~STRING
     Cleo Ambassador objects are frozen, domain entity objects that are safe for being passed across domain boundaries
   STRING
-  spec.homepage = "https://github.com/bodacious/ambassadors"
+  spec.homepage = "https://github.com/meetcleo/ambassadors"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.2.0"
 
