@@ -10,4 +10,5 @@ module Ambassadors
   require_relative "ambassadors/ambassador"
   require_relative "ambassadors/ambassador_collection"
   require_relative "ambassadors/errors"
+  require_relative "ambassadors/railtie" if defined?(Rails)
 end

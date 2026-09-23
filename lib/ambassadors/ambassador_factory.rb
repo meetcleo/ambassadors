@@ -2,8 +2,9 @@
 
 module Ambassadors
   class AmbassadorFactory # :nodoc:
-    def initialize(default_ambassador_class: nil)
+    def initialize(default_ambassador_class: nil, ambassador_options: {})
       @default_ambassador_class = default_ambassador_class
+      @ambassador_options = ambassador_options
     end
 
     ##
@@ -17,7 +18,7 @@ module Ambassadors
     def cast(entity)
       return entity.to_ambassador if entity.respond_to?(:to_ambassador)
 
-      return @default_ambassador_class.new(entity) if @default_ambassador_class
+      return @default_ambassador_class.new(entity, **@ambassador_options) if @default_ambassador_class
 
       raise UresolvedAmbassadorError, "Cannot infer ambassador for #{entity}" unless entity.class.name
 

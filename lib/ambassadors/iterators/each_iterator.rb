@@ -7,6 +7,5 @@ module Ambassadors
     # iterate over each item in the set.
     class EachIterator < Iterator
     end
-    private_constant :EachIterator
   end
 end

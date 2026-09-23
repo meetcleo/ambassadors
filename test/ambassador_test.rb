@@ -1,4 +1,3 @@
-# typed: false
 # frozen_string_literal: true
 
 require "test_helper"
@@ -113,5 +112,13 @@ class AmbassadorTest < Minitest::Test
     ambassador_b = TestFooAmbassador.new(entity)
 
     assert_equal ambassador_a, ambassador_b
+  end
+
+  test "#to_ambassador returns self" do
+    entity = stub("TestFoo", foo: "bar")
+
+    ambassador = TestFooAmbassador.new(entity)
+
+    assert_equal ambassador, ambassador.to_ambassador
   end
 end

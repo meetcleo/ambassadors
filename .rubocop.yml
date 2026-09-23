@@ -31,3 +31,6 @@ Style/StringLiteralsInInterpolation:
 plugins:
   - rubocop-minitest
   - rubocop-rake
+
+Metrics/ParameterLists:
+  CountKeywordArgs: false
