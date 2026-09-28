@@ -11,5 +11,9 @@ module Ambassadors
     require_relative "iterators/each_iterator"
     require_relative "iterators/find_each_iterator"
     require_relative "iterators/iterator_resolver"
+
+    def self.resolve(enumerable:)
+      IteratorResolver.resolve(enumerable: enumerable)
+    end
   end
 end

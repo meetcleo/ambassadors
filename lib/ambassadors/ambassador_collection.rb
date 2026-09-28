@@ -52,7 +52,7 @@ module Ambassadors
                    ambassador_class: nil,
                    ambassador_options: {},
                    batch_size: DEFAULT_BATCH_SIZE,
-                   iterator: Ambassadors::Iterators::IteratorResolver.resolve(
+                   iterator: Ambassadors::Iterators.resolve(
                      enumerable:
                    ),
                    **)
