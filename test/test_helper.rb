@@ -19,14 +19,15 @@ module Minitest
       define_method("test_#{name}", &)
     end
 
-    def with_test_table(table_name, row_options, &block)
-      conn = ActiveRecord::Base.connection
-      conn.create_table(table_name, temporary: true, force: true) do |t|
+    def with_test_table(table_name, row_options = nil, temporary: true, **row_options_as_keywords)
+      row_options ||= row_options_as_keywords
+      conn = ::ActiveRecord::Base.connection
+      conn.create_table(table_name, temporary:, force: true) do |t|
         row_options.each do |(name, opts_hash)|
           t.public_send(opts_hash[:type], name, **opts_hash.except(:type))
         end
       end
-      block.call
+      yield
     ensure
       conn.drop_table(table_name, if_exists: true)
     end

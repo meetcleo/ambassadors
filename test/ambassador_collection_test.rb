@@ -42,7 +42,7 @@ class AmbassadorCollectionTest < Minitest::Test
 
     returned_classes = collection.map(&:class)
 
-    assert_equal(3.times.map { ambassador_class }, returned_classes)
+    assert_equal(Array.new(3) { ambassador_class }, returned_classes)
   end
 
   test "#each batches ActiveRecord::Relation according to batch_size" do
@@ -118,6 +118,77 @@ class AmbassadorCollectionTest < Minitest::Test
     end
   end
 
+  test "#each ActiveRecord::Relations uses the cursor option" do
+    with_test_table(
+      :prioritised_entities,
+      { priority: { type: :integer, null: false } },
+      temporary: false
+    ) do
+      ActiveRecord::Base.connection
+                        .add_index(:prioritised_entities, :priority, unique: true)
+
+      model = Class.new(ActiveRecord::Base) do
+        self.table_name = "prioritised_entities"
+      end
+      6.times do |i|
+        model.create!(priority: 6 - i)
+      end
+      enumerable = model.order(:priority)
+      ambassador_class = Class.new(Ambassador) do
+        expose :id, :priority
+      end
+
+      collection = AmbassadorCollection.new(
+        enumerable,
+        ambassador_class: ambassador_class,
+        cursor: :priority
+      ).to_a
+
+      assert_equal 1, collection[0].priority
+      assert_equal 2, collection[1].priority
+      assert_equal 3, collection[2].priority
+      assert_equal 4, collection[3].priority
+      assert_equal 5, collection[4].priority
+      assert_equal 6, collection[5].priority
+    end
+  end
+
+  test "#each ActiveRecord::Relations uses the order with cursor option" do
+    with_test_table(
+      :prioritised_entities,
+      { priority: { type: :integer, null: false } },
+      temporary: false
+    ) do
+      ActiveRecord::Base.connection
+                        .add_index(:prioritised_entities, :priority, unique: true)
+
+      model = Class.new(ActiveRecord::Base) do
+        self.table_name = "prioritised_entities"
+      end
+      6.times do |i|
+        model.create!(priority: i)
+      end
+      enumerable = model.order(:priority)
+      ambassador_class = Class.new(Ambassador) do
+        expose :id, :priority
+      end
+
+      collection = AmbassadorCollection.new(
+        enumerable,
+        ambassador_class: ambassador_class,
+        cursor: :priority,
+        order: :desc
+      ).to_a
+
+      assert_equal 5, collection[0].priority
+      assert_equal 4, collection[1].priority
+      assert_equal 3, collection[2].priority
+      assert_equal 2, collection[3].priority
+      assert_equal 1, collection[4].priority
+      assert_equal 0, collection[5].priority
+    end
+  end
+
   test "#each returns an enumerator when no block is given" do
     collection = AmbassadorCollection.new([])
 
@@ -156,6 +227,60 @@ class AmbassadorCollectionTest < Minitest::Test
     enumerator = collection.each
 
     assert_instance_of ambassador_class, enumerator.next
+  end
+
+  test "#each passes ambassador_options to each ambassador when iterating" do
+    entities = [
+      build(:entity, id: 1),
+      build(:entity, id: 2),
+      build(:entity, id: 3)
+    ]
+    ambassador_class = Class.new(Ambassador) do
+      def initialize(entity, version: nil)
+        @version = version
+        super(entity)
+      end
+
+      expose :id
+
+      attr_reader :version
+    end
+
+    collection = AmbassadorCollection.new(
+      entities,
+      ambassador_class: ambassador_class,
+      ambassador_options: { version: "v2" }
+    )
+
+    returned_versions = collection.map(&:version)
+
+    assert_equal %w[v2 v2 v2], returned_versions
+  end
+
+  test "#each passes multiple ambassador_options to each ambassador" do
+    entities = [build(:entity, id: 1)]
+    ambassador_class = Class.new(Ambassador) do
+      def initialize(entity, version: nil, flag: nil)
+        @version = version
+        @flag = flag
+        super(entity)
+      end
+
+      expose :id
+
+      attr_reader :version, :flag
+    end
+
+    collection = AmbassadorCollection.new(
+      entities,
+      ambassador_class: ambassador_class,
+      ambassador_options: { version: "v3", flag: true }
+    )
+
+    ambassador = collection.first
+
+    assert_equal "v3", ambassador.version
+    assert ambassador.flag
   end
 
   test "#length returns the number of items in the collection" do
@@ -285,12 +410,12 @@ class AmbassadorCollectionTest < Minitest::Test
     )
     results = collection.select { |item| item.id.even? }
 
-    refute_includes  results.map(&:id), 1
-    assert_includes  results.map(&:id), 2
-    refute_includes  results.map(&:id), 3
-    assert_includes  results.map(&:id), 4
-    refute_includes  results.map(&:id), 5
-    assert_includes  results.map(&:id), 6
+    refute_includes results.map(&:id), 1
+    assert_includes results.map(&:id), 2
+    refute_includes results.map(&:id), 3
+    assert_includes results.map(&:id), 4
+    refute_includes results.map(&:id), 5
+    assert_includes results.map(&:id), 6
 
     refute_nil results, "Expected to find an entry with ID 6"
   end

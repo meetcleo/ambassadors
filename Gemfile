@@ -25,6 +25,6 @@ end
 group :test do
   gem "activerecord", "~> 8.1"
   gem "minitest", ">=  5.27.0"
-  gem "mocha", ">= 2.8.2"
+  gem "mocha", "~> 3.1"
   gem "sqlite3", "~> 2.8"
 end

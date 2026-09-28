@@ -1,17 +1,16 @@
-# typed: false
 # frozen_string_literal: true
 
 module Ambassadors
   ##
-  # Ambassador objects are returned by our domain interface methods.
+  # Read-only wrapper around a domain entity.
   #
-  # They act as read-only wrappers for domain entities, forming a stable and immutable
-  # interface to expose selected attributes to the outside world. This protects the internal
-  # models from direct access and allows for safer internal evolution.
+  # An Ambassador forms a stable, immutable interface that exposes selected
+  # attributes of an entity to the outside world. Domain interface methods
+  # return Ambassadors instead of the underlying entities, so internal models
+  # are protected from direct access and can evolve safely.
   #
-  # YOU SHOULD NOT NEED TO CREATE TOO MANY OF THESE OBJECTS. BUT WHEN RETURNING A DOMAIN ENTITY
-  # THROUGH A DOMAIN INTERFACE METHOD IT MUST BE AN AMBASSADOR
-  # ------------------------------------------------------------------------------------------
+  # @note Although this class is defined under the {Ambassadors} namespace,
+  # it defines the top-level constant {::Ambassador} for ergonomics.
   #
   # @example Defining a user ambassador
   #   class UserAmbassador < Ambassador
@@ -21,7 +20,7 @@ module Ambassadors
   #   user = User.find(...)
   #   ambassador = UserAmbassador.new(user)
   #   ambassador.email # => "user@example.com" (frozen)
-  #   ambassador.cleo_bank_cards # => NoMethodError
+  #   ambassador.payment_cards # => NoMethodError
   class ::Ambassador
     require "ambassadors/freezer"
     require "ambassadors/property_name_checker"
@@ -87,6 +86,13 @@ module Ambassadors
     # @return [String]
     def inspect
       "<#{self.class.name} #{exposed_properties.map { |k, v| "#{k}=#{v.inspect}" }.join(", ").strip}>"
+    end
+
+    ##
+    # Returns this Ambassador. (Used for polymorphic consistency)
+    # @return [Ambassador]
+    def to_ambassador
+      self
     end
 
     private

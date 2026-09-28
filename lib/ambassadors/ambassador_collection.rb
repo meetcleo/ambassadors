@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# typed: false
 
 module Ambassadors
   ##
@@ -44,17 +43,29 @@ module Ambassadors
     # Wraps an enumerable collection of entities in Ambassadors
     # @param enumerable [Enumerable]
     # @param ambassador_class [nil, Class]
+    # @param ambassador_options [Hash]
     # @param batch_size [Integer] The number of records to load per batch (if not loading from memory)
     # @param iterator [Ambassadors::Iterators::IterationStrategy] Determines how to iterate over each item
+    # @param cursor [Symbol] The cursor to order batches on (@see https://api.rubyonrails.org/classes/ActiveRecord/Batches.html#method-i-find_each)
+    # @param order [Symbol<asc|desc>] The order by direction for batching (@see https://api.rubyonrails.org/classes/ActiveRecord/Batches.html#method-i-find_each)
     def initialize(enumerable,
                    ambassador_class: nil,
+                   ambassador_options: {},
                    batch_size: DEFAULT_BATCH_SIZE,
                    iterator: Ambassadors::Iterators::IteratorResolver.resolve(
                      enumerable:
-                   ))
+                   ),
+                   **)
       @enumerable = enumerable
-      @iterator = iterator.new(enumerable: @enumerable, batch_size: batch_size)
-      @ambassador_factory = AmbassadorFactory.new(default_ambassador_class: ambassador_class)
+      @iterator = iterator.new(
+        enumerable: @enumerable,
+        batch_size: batch_size,
+        **
+      )
+      @ambassador_factory = AmbassadorFactory.new(
+        default_ambassador_class: ambassador_class,
+        ambassador_options: ambassador_options
+      )
     end
 
     def each
@@ -74,6 +85,13 @@ module Ambassadors
 
     alias size length
     alias count length
+
+    ##
+    # Whether the current collection has no items
+    # @return [Boolean]
+    def empty?
+      @enumerable.empty?
+    end
 
     ##
     # The entire collection. Returns self.
